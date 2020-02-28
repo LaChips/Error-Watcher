@@ -1,38 +1,26 @@
-/* eslint-env meteor */
 Package.describe({
-  name: 'la_chips:error-watcher',
-  summary: 'Automatic try catch on blaze helpers',
-  git: 'https://github.com/La_chips/error-watcher.git',
-  version: '0.1'
-})
+  name: 'lachips:error-watcher',
+  version: '0.0.1',
+  // Brief, one-line summary of the package.
+  summary: 'Automatically report client errors to the server',
+  // URL to the Git repository containing the source code for this package.
+  git: 'https://github.com/LaChips/Error-Watcher',
+  // By default, Meteor will default to using README.md for documentation.
+  // To avoid submitting documentation, set this field to null.
+  documentation: 'README.md'
+});
 
-Package.onUse(function (api, where) {
-  api.versionsFrom('1.5')
-  api.use('ecmascript')
-  api.use('random')
-  api.use([
-    'blaze@2.3.3',
-    'reactive-dict@1.3.0',
-    'templating@1.3.2'
-  ], 'client')
+Package.onUse(function(api) {
+  api.versionsFrom('1.8.2');
+  api.use('ecmascript');
+  api.use('themeteorchef:bert@2.2.0');
+  api.mainModule('error-watcher.js');
+});
 
-  api.addFiles([
-    'error-watcher.js'
-  ], 'client')
-})
-
-/*Package.onTest(function (api) {
-  api.use([
-    'random',
-    'ecmascript',
-    'practicalmeteor:chai',
-    'cultofcoders:mocha'
-  ])
-  api.use([
-    'blaze@2.3.2',
-    'reactive-dict@1.2.0',
-    'templating@1.3.2',
-    'la_chips:error-watcher@0.1'
-  ], 'client')
-  api.mainModule('error-watcher.tests.js', 'client')
-})*/
+Package.onTest(function(api) {
+  api.use('ecmascript');
+  api.use('tinytest');
+  api.use('themeteorchef:bert@2.2.0');
+  api.use('lachips:error-watcher');
+  api.mainModule('error-watcher-tests.js');
+});
