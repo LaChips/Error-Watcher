@@ -18,10 +18,10 @@ meteor add lachips:error-watcher
 Error Watcher only needs a server method to work. For now, this methods have to be named logWatchError.
 
 ```bash
-	logWatchError(data) {
-		console.log("error : ", data);
-		return {msg: "client bert alert message"};
-	}
+logWatchError(data) {
+	console.log("error : ", data);
+	return {msg: "client bert alert message"};
+}
 ```
 
 The ```data``` parameter contains some information about the error :
