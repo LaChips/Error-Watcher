@@ -19,12 +19,12 @@ By default, Error-watcher only performs a console.log of the error. To change th
 
 ```bash
 ErrorWatcher.msg = "your message";
-ErrorWatcher.func = function(error) {
+ErrorWatcher.func = function(data) {
 	//do your things
 }
 ```
 
-The ```error``` parameter contains some information about the error :
+The ```data``` parameter contains some information about the error :
 
 |key|type|description|
 |---|----|-----------|
