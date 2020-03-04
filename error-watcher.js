@@ -5,13 +5,9 @@ import { Template } from 'meteor/templating'
 import { check, Match } from 'meteor/check'
 import { Tracker } from 'meteor/tracker'
 
-var configuration = {
-  method : "logWatchError",
-};
-
 if (Meteor.isClient) {
   function sendError(error) {
-    Meteor.call(configuration.method, error, function(err, res) {
+    Meteor.call("logWatchError", error, function(err, res) {
       if (!err) {
         Bert.alert(res.msg, "danger");
       }
