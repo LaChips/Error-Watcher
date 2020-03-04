@@ -1,11 +1,11 @@
 # Meteor Error Watcher
 
-Error Watcher allows you to call a server method when a blaze error occurs. It's been made do allow automatic error reporting.
+Error Watcher allows you to call a server method when a blaze error occurs. It's been made to allow automatic error reporting.
 
 ## Features
 
  - Automatic error reporting
- - Bert alert on client side to notify the user
+ - Bert alert with customizable message on client side to notify the user
 
 ## Installation
 
@@ -15,16 +15,16 @@ meteor add lachips:error-watcher
 
 ## Usage
 
-Error Watcher only needs a server method to work. For now, this methods have to be named logWatchError.
+By default, Error-watcher only performs a console.log of the error. To change the default server method and the default Bert message, simply add the following in your server main.js
 
 ```bash
-logWatchError(data) {
-	console.log("error : ", data);
-	return {msg: "client bert alert message"};
+ErrorWatcher.msg = "your message";
+ErrorWatcher.func = function(error) {
+	//do your things
 }
 ```
 
-The ```data``` parameter contains some information about the error :
+The ```error``` parameter contains some information about the error :
 
 |key|type|description|
 |---|----|-----------|
@@ -35,10 +35,13 @@ The ```data``` parameter contains some information about the error :
 |trace|Array|the complete trace of the error|  
 </br>
 
+## What's next ?
+
+ - Add a support for onCreated and events errors
+ - Add react compatibility
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

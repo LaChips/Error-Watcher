@@ -1,35 +1,38 @@
-// Write your package code here!
-
-// Variables exported by this module can be imported by other packages and
-// applications. See error-watcher-tests.js for an example of importing.
 export const name = 'error-watcher';
 
 import { Blaze } from 'meteor/blaze'
 import { Template } from 'meteor/templating'
 import { check, Match } from 'meteor/check'
+import { Tracker } from 'meteor/tracker'
 
 var configuration = {
   method : "logWatchError",
 };
 
-(function(onCreated){
-  var debugFunc;
-  Blaze._throwNextException = false;
+if (Meteor.isClient) {
+  function sendError(error) {
+    Meteor.call(configuration.method, error, function(err, res) {
+      if (!err) {
+        Bert.alert(res.msg, "danger");
+      }
+    });
+  }
 
-  Blaze._reportException = function (e, msg) {
-    if (Blaze._throwNextException) {
-      Blaze._throwNextException = false;
-      throw e;
+  function makeError(error, self) {
+    if (self != null && Meteor.isDevelopment)
+      console.log(error);
+    let tmpl = (Template.instance() != null) ? Template.instance().view : self;
+    let trace = error.stack.split('\n').map(function (line) { return line.trim(); });
+    let where = (Template.instance() != null) ? trace[0].split('@')[0] : trace[0].split('/')[0] + " onRendered";
+    let obj = {
+      text: "" + error,
+      date: parseInt(Date.now() / 1000),
+      function: where,
+      template: tmpl.name.split('.')[1],
+      trace: trace.slice(0, trace.length - 1)
     }
-    if (! debugFunc)
-      // adapted from Tracker
-      debugFunc = function () {
-        return (typeof Meteor !== "undefined" ? Meteor._debug :
-                ((typeof console !== "undefined") && console.log ? console.log :
-                 function () {}));
-      };
-    debugFunc()(msg || 'Exception caught in template:', e.stack || e.message || e);
-  };
+    return obj;
+  }
 
   Blaze._wrapCatchingExceptions = function (f, where) {
     if (typeof f !== 'function')
@@ -38,22 +41,62 @@ var configuration = {
       try {
         return f.apply(this, arguments);
       } catch (error) {
-        let trace = error.stack.split('\n').map(function (line) { return line.trim(); })
-        let obj = {
-          text: "" + error,
-          date: parseInt(Date.now() / 1000),
-          function: trace[0].split('@')[0],
-          template: Template.instance().view.name.split('.')[0],
-          trace: trace.slice(0, trace.length -1)
-        }
-        console.log(configuration);
-        Meteor.call(configuration.method, obj, function(err, res) {
-          if (!err) {
-            Bert.alert(res.msg, "danger");
-          }
-        });
+        sendError(makeError(error));
         Blaze._reportException(error, 'Exception in ' + where + ':');
       }
     };
   };
-}).call(this);
+
+  Blaze.View.prototype.onViewReady = function (cb) {
+    var self = this;
+    var fire = function () {
+      Tracker.afterFlush(function () {
+        if (! self.isDestroyed) {
+          Blaze._withCurrentView(self, function () {
+            try {
+              cb.call(self);
+            } catch(error) {
+              sendError(makeError(error, self));
+            }
+          });
+        }
+      });
+    };
+    self._onViewRendered(function onViewRendered() {
+      if (self.isDestroyed)
+        return;
+      if (! self._domrange.attached) {
+        try {
+          self._domrange.onAttached(fire);
+        } catch(error) {
+            sendError(makeError(error, self));
+        }
+      }
+      else {
+        try {
+          fire();
+        } catch(error) {
+            sendError(makeError(error, self));
+        }
+      }
+    });
+  };
+}
+
+if (Meteor.isServer) {
+
+  export var ErrorWatcher = {
+    msg: "",
+    func: function(data) {
+      console.log(data);
+    }
+  };
+
+  Meteor.methods({
+    logWatchError(data) {
+      ErrorWatcher.func(data);
+      return {msg: ErrorWatcher.msg};
+    }
+  })
+}
+

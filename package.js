@@ -1,8 +1,8 @@
 Package.describe({
   name: 'lachips:error-watcher',
-  version: '0.0.1',
+  version: '1.1.0',
   // Brief, one-line summary of the package.
-  summary: 'Automatically report client errors to the server',
+  summary: 'Automatically report Blaze client errors to the server',
   // URL to the Git repository containing the source code for this package.
   git: 'https://github.com/LaChips/Error-Watcher',
   // By default, Meteor will default to using README.md for documentation.
