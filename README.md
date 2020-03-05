@@ -37,7 +37,8 @@ The ```error``` parameter contains some information about the error :
 
 ## What's next ?
 
- - Add a support for onCreated and events errors
+ - Add support for events errors
+ - Add support for every client errors
  - Add react compatibility
 
 ## Contributing

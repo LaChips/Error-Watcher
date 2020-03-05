@@ -1,6 +1,6 @@
 Package.describe({
   name: 'lachips:error-watcher',
-  version: '1.2.1',
+  version: '1.3.2',
   // Brief, one-line summary of the package.
   summary: 'Automatically report Blaze client errors to the server',
   // URL to the Git repository containing the source code for this package.
