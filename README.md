@@ -20,10 +20,13 @@ Import ErrorWatcher in your main.js :
 import { ErrorWatcher } from 'meteor/lachips:error-watcher';
 ```
 
-By default, Error-watcher only performs a console.log of the error. To change the default server method and the default Bert message, simply add the following in your server main.js
+By default, Error-watcher only performs a console.log of the error on the server. To change the default server method and the default client behavior, simply add the following in your server main.js.
 
 ```javascript
-ErrorWatcher.msg = "your message";
+ErrorWatcher.showClientAlert = false; //If set to false, alert won't be displayed
+ErrorWatcher.msg = "your message"; //The message included in the alert. Alerts won't show up if you leave it empty (default).
+ErrorWatcher.position = "alert position"; //fixed-top (default) | fixed-bottom | growl-top-left | growl-top-right | growl-bottom-left | growl-bottom-right;
+ErrorWatcher.icon = "alert icon"; // You must provide Font Awesome yourself, leave it blank it you don't.
 ErrorWatcher.func = function(error) {
 	//do your things
 }

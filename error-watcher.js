@@ -8,8 +8,8 @@ import { Tracker } from 'meteor/tracker'
 if (Meteor.isClient) {
   function sendError(error) {
     Meteor.call("logWatchError", error, function(err, res) {
-      if (!err && res.msg.length > 0) {
-        Bert.alert(res.msg, "danger");
+      if (!err && res.msg.length > 0 && res.) {
+        Bert.alert(res.msg, "danger", res.position, res.icon);
       }
     });
   }
@@ -145,6 +145,9 @@ if (Meteor.isServer) {
 
   export var ErrorWatcher = {
     msg: "",
+    showClientAlert: true,
+    position: "fixed-top",
+    icon: "fas fa-exclamation-triangle",
     func: function(data) {
       console.log(data);
     }
@@ -154,8 +157,8 @@ if (Meteor.isServer) {
     logWatchError(data) {
       ErrorWatcher.func(data);
       if (ErrorWatcher.showClientAlert == false)
-        return {msg: ""};
-      return {msg: ErrorWatcher.msg};
+        return {msg: "", position: ErrorWatcher.position, icon: ErrorWatcher.icon};
+      return {msg: ErrorWatcher.msg, position: ErrorWatcher.position, icon: ErrorWatcher.icon};
     }
   })
 }
