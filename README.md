@@ -15,9 +15,14 @@ meteor add lachips:error-watcher
 
 ## Usage
 
+Import ErrorWatcher in your main.js :
+```javascript
+import { ErrorWatcher } from 'meteor/lachips:error-watcher';
+```
+
 By default, Error-watcher only performs a console.log of the error. To change the default server method and the default Bert message, simply add the following in your server main.js
 
-```bash
+```javascript
 ErrorWatcher.msg = "your message";
 ErrorWatcher.func = function(error) {
 	//do your things
