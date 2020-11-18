@@ -8,7 +8,7 @@ import { Tracker } from 'meteor/tracker'
 if (Meteor.isClient) {
   function sendError(error) {
     Meteor.call("logWatchError", error, function(err, res) {
-      if (!err) {
+      if (!err && res.msg.length > 0) {
         Bert.alert(res.msg, "danger");
       }
     });
@@ -153,6 +153,8 @@ if (Meteor.isServer) {
   Meteor.methods({
     logWatchError(data) {
       ErrorWatcher.func(data);
+      if (ErrorWatcher.showClientAlert == false)
+        return {msg: ""};
       return {msg: ErrorWatcher.msg};
     }
   })
