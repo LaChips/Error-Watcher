@@ -9,7 +9,10 @@ Error Watcher allows you to call a server method when a blaze error occurs. It's
 
 ## Installation
 
+NOTE: The Bert alert package is not included, you need to install it manually.
+
 ```bash
+meteor add themeteorchef:bert
 meteor add lachips:error-watcher
 ```
 
